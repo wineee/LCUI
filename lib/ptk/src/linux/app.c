@@ -1,4 +1,4 @@
-﻿/*
+/*
  * lib/ptk/src/linux/app.c
  *
  * Copyright (c) 2023-2025, Liu Chao <i@lc-soft.io> All rights reserved.
@@ -118,12 +118,12 @@ int ptk_window_get_height(ptk_window_t *wnd)
 
 void ptk_window_set_min_width(ptk_window_t *wnd, int min_width)
 {
-        linux_app.window.set_max_width(wnd, min_width);
+        linux_app.window.set_min_width(wnd, min_width);
 }
 
 void ptk_window_set_min_height(ptk_window_t *wnd, int min_height)
 {
-        linux_app.window.set_max_width(wnd, min_height);
+        linux_app.window.set_min_height(wnd, min_height);
 }
 
 void ptk_window_set_max_width(ptk_window_t *wnd, int max_width)
@@ -226,7 +226,7 @@ int ptk_app_destroy(void)
                 return -1;
         }
         linux_app.active = false;
-        if (linux_app.id != PTK_APP_ID_LINUX_X11) {
+        if (linux_app.id == PTK_APP_ID_LINUX) {
                 ptk_linux_mouse_destroy();
                 ptk_linux_keyboard_destroy();
         }
