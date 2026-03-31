@@ -568,6 +568,7 @@ size_t ui_server_render(void)
         for (list_each(node, &ui_server.connections)) {
                 conn = node->data;
                 if (!conn->window_visible) {
+                        DEBUG_MSG("[ui-server] skip render: window_visible is false\n");
                         continue;
                 }
                 ui_metrics.dpi = 1.f * ptk_window_get_dpi(conn->window);
