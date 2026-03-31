@@ -16,6 +16,7 @@
 #include "keyboard.h"
 #include "fbapp.h"
 #include "x11app.h"
+#include "waylandapp.h"
 #include "x11clipboard.h"
 
 #ifdef PTK_LINUX
@@ -183,8 +184,19 @@ ptk_app_id_t ptk_get_app_id(void)
 
 int ptk_app_init(const wchar_t *name)
 {
-        linux_app.id = PTK_APP_ID_LINUX;
+	linux_app.id = PTK_APP_ID_LINUX;
+	ptk_waylandapp_driver_init(&linux_app.app);
+	ptk_waylandwindow_driver_init(&linux_app.window);
+	if (linux_app.app.init(name) == 0) {
+		logger_debug("[app] use engine: waylandapp\n");
+		linux_app.id = PTK_APP_ID_LINUX_WAYLAND;
+		linux_app.active = true;
+		return 0;
+	}
+	memset(&linux_app.app, 0, sizeof(linux_app.app));
+	memset(&linux_app.window, 0, sizeof(linux_app.window));
 #ifdef PTK_HAS_LIBX11
+
         ptk_x11app_driver_init(&linux_app.app);
         ptk_x11window_driver_init(&linux_app.window);
         if (linux_app.app.init(name) == 0) {
